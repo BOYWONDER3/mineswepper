@@ -1,6 +1,6 @@
 // ui display
 
-import {createBoard} from './mineswepper.js';
+import {createBoard, markTile } from './mineswepper.js';
 const BOARD_SIZE = 10
 const NUMBER_OF_MINES = 2
 
@@ -10,6 +10,13 @@ const minesLeftText = document.querySelector('[data-mine-count]')
 board.forEach(row => {  
     row.forEach(tile => {
         boardElement.append(tile.element)
+        tile.element.addEventListener('click', e => {
+
+        })
+        tile.element.addEventListener('contextmenu', e =>{
+            e.preventDefault()
+            markTile(tile)
+        })
     })
 })
 boardElement.style.setProperty('--size', BOARD_SIZE)
