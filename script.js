@@ -1,6 +1,6 @@
 // ui display
 
-import {createBoard, markTile } from './mineswepper.js';
+import { TILE_STATUSES, createBoard, markTile, revealTile, checkWin, checkLoose } from './mineswepper.js';
 const BOARD_SIZE = 10
 const NUMBER_OF_MINES = 2
 
@@ -11,13 +11,34 @@ board.forEach(row => {
     row.forEach(tile => {
         boardElement.append(tile.element)
         tile.element.addEventListener('click', e => {
-
+            revealTile(board, tile)
+            checkGameEnd()
         })
-        tile.element.addEventListener('contextmenu', e =>{
+        tile.element.addEventListener('contextmenu', e => {
             e.preventDefault()
             markTile(tile)
+            listMinesLeft()
         })
     })
 })
 boardElement.style.setProperty('--size', BOARD_SIZE)
 minesLeftText.textContent = NUMBER_OF_MINES
+
+function listMinesLeft() {
+    const markedTilesCount = board.reduce((count, row) => {
+        return (
+            count + row.filter(tile => tile.status === TILE_STATUSES.MARKED).length 
+        )
+    }, 0)
+    minesLeftText.textContent = NUMBER_OF_MINES - markedTilesCount
+}
+
+function checkGameEnd() {
+    const win = checkWin(board)
+    const loose = checkLoose(board)
+
+    if (win || loose) {
+        boardElement.addEventListener('click', stopProp, { capture: true })
+        boardElement.addEventListener('contextmenu', stopProp, { capture: true })
+    }
+}
