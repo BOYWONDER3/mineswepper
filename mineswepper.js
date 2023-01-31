@@ -67,10 +67,14 @@ export function revealTile(board, tile) {
 }
 
 export function checkWin(board) {
-    return true
+
 }
 export function checkLoose(board) {
-    
+    return board.some(row => {
+        return row.some(tile => {
+            return tile.status === TILE_STATUSES.MINE
+        })
+    })
 }
 
 function getMinePositions(boardSize, numberOfMines) {

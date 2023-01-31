@@ -7,6 +7,7 @@ const NUMBER_OF_MINES = 2
 const board = createBoard(BOARD_SIZE, NUMBER_OF_MINES)
 const boardElement = document.querySelector('.board')
 const minesLeftText = document.querySelector('[data-mine-count]')
+const messageText = document.querySelector('.subtext')
 board.forEach(row => {  
     row.forEach(tile => {
         boardElement.append(tile.element)
@@ -41,4 +42,20 @@ function checkGameEnd() {
         boardElement.addEventListener('click', stopProp, { capture: true })
         boardElement.addEventListener('contextmenu', stopProp, { capture: true })
     }
+    if (win) {
+        messageText.textContent = 'YOU WIN'
+    }
+    if (loose) {
+        messageText.textContent = 'YOU LOOSE'
+        board.forEach( row => {
+            row.forEach(tile => {
+                if (tile.status === TILE_STATUSES.MARKED) markTile(tile)
+                if (tile.mine) revealTile(board, tile)
+            })
+        })
+    }
+}
+
+function stopProp(e) {
+    e.stopImmediatePropagation()
 }
